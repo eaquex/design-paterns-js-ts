@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+    <!-- If you'd like to support IE8 (for Video.js versions prior to v7) -->
+    <!-- <script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script> -->    
+
+    <style>
+        html, body {
+            background-color: black;
+            color: white;
+        }
+
+        select {
+            font-size: 1.5rem;
+            background-color: rgb(10,10,10);;
+            color: rgb(255,255,255);
+        }
+
+        select option:disabled {
+            background-color: rgb(10,10,10);
+        }
+
+        select option:hover {
+            background-color: rgb(10, 10, 10);
+            color: white;
+        }
+
+        select option {
+            background-color: rgb(10, 10, 10);
+            color: white;
+        }
+
+        select:focus ,select:active, select option:focus, select option:active {
+            border: 2px solid yellow;
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <form">
+        <select id="seasons">
+            <option value="" disabled selected>--- Selecciona una temporada ---</option>
+        </select>
+        <select id="chapters">
+            <option value="" disabled selected>--- Selecciona un capítulo ---</option>
+        </select>
+    </form>
+    <video id="video-player" class="video-js" controls preload="auto" width="320" height="264" data-setup="{}"></video>
+
+    <script  type="text/javascript">
+        const covers = {
+            3: "https://gnula.se/img/portada/170x243/navy-investigacion-criminal-ncis_qxezo3knqf92016-03-24.jpg"
+        }
+
+        const clips = {
+            1 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+            },
+            2 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+            },
+            3 : {
+                1 : 'https://s26.gamovideo.com:444/frap5bppcfnv3h2yugj5v2c3p4o544d3v3muobzbkvdwfgvnbujyu4hy3doq/v.mp4',
+                2 : 'https://s26.gamovideo.com:444/frap5gxpcfnv3h2yugj5vzkvoqqejwt6imeskowtqliat2z3ttkeq2cdobsa/v.mp4',
+                3 : 'https://s29.gamovideo.com:444/fjap5fppcfnv3h2yugj5vo2zpnfzl3otv2uv4ktf7uvwanlcoiu6wfue5tua/v.mp4',
+                4 : 'https://s29.gamovideo.com:444/fjap5bhpcfnv3h2yugj5vzkpekznyup6ugab4ezx3typsst6k46pwbqvbzva/v.mp4',
+                5 : 'https://s31.gamovideo.com:444/fbap4vfvd5nv3h2yug35v5ylo72efdmdtu223xzxw4bl7jz5qkd3vepklmeq/v.mp4',
+                6 : 'https://s31.gamovideo.com:444/fbap5hppcfnv3h2yugj5vycvpasdushxz4l6psx6uikt2v6nyf3myotkatkq/v.mp4',
+                7 : 'https://s31.gamovideo.com:444/fbap5fxpcfnv3h2yugj5v5sye537kqctoos3oqx3orqz2a3ti5iigxeyxsdq/v.mp4',
+                8 : 'https://s29.gamovideo.com:444/fjap4txocfnv3h2yugj5v4cgnhg3i763guygeyrmfnsvfnkkbzmuqjbhiuzq/v.mp4',
+                9 : 'https://s29.gamovideo.com:444/fjap46pocfnv3h2yugj5vn2mo6ypiowmuvzolk6qnfuwvktfoo6f53xqedvq/v.mp4',
+                10 : 'https://s22.gamovideo.com:444/kbap42hocfnv3h2yugj5vy27pt33fzipb7bdaba42tpavz277w32c4bpe3wq/v.mp4',
+                11 : 'https://s22.gamovideo.com:444/kbap457ocfnv3h2yugj5v3skewn62mfiox7t2guuob6tuhcswfhtkyszsgaq/v.mp4',
+                12 : 'https://s22.gamovideo.com:444/kbap46xocfnv3h2yugj5v52ooezex4s5nbt4ikzy7k6s5wdxoe2oc2bbqfjq/v.mp4',
+                13 : 'https://s22.gamovideo.com:444/kbap47hocfnv3h2yugj5v2s3nl4gtxu4srzwmzsjfjn2qtw3rd3hbixsnida/v.mp4',
+                14 : 'https://s26.gamovideo.com:444/frap45xocfnv3h2yugj5vmseplghmegzaxuu2mtnekv4rgo7euhcsnlhpgya/v.mp4',
+                15 : 'https://s26.gamovideo.com:444/frap4opocfnv3h2yugj5v5csmdsy2kt2o3pgxnp77qzy5vt4ppx4wagjn7rq/v.mp4',
+                16 : 'https://s31.gamovideo.com:444/fbap4tpocfnv3h2yugj5v62wepzkniyjjqvs26voqkhgdieq2rggaeokvira/v.mp4',
+                17 : 'https://s31.gamovideo.com:444/fbap4rhocfnv3h2yugj5v62lmuj2bphfv4z6zdqujpm4iffrf2vsjjmvfliq/v.mp4',
+                18 : 'https://s31.gamovideo.com:444/fbap4q7ocfnv3h2yugj5vmsrofkgsbpdu4pbydp2tydgwrjznf5oetat32ha/v.mp4',
+                19 : 'https://tp23.gamovideo.com:444/f5ap4qpocfnv3h2yugj5v2sge4qw5acx77un3hmcpfxp3xjt5s4obaxnxwpq/v.mp4',
+                20 : 'https://tp23.gamovideo.com:444/f5ap4r7ocfnv3h2yugj5v4qjffiomhvtchb6egjunnfh44oyfvhavx7n2jhq/v.mp4',
+                21 : 'https://s22.gamovideo.com:444/kbap4rpocfnv3h2yugj5vzcimtoufedynmt5rw5bkdmuy42qwtdzduh7myca/v.mp4',
+                22 : 'https://s22.gamovideo.com:444/kbap4k7ocfnv3h2yugj5vmcrozc5h2e37e4mog3uzazgfd6gtjcr2ieu422a/v.mp4',
+                23 : 'https://s22.gamovideo.com:444/kbap4u7ocfnv3h2yugj5vnk7ex5ohhgpmgbk36u3wf5mwumk6xcwmbdwoh3a/v.mp4',
+                24 : 'https://s22.gamovideo.com:444/kbap4phocfnv3h2yugj5v42jmcaz3ibwcliqjxmd4lfq6bglc3gg7ixv3yiq/v.mp4'
+            },
+            4 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            5 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : ''
+            },
+            6 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : '',
+                25 : '',
+            },
+            7 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : '',
+            },
+            8: {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : '',
+            },
+            9 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            10: {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            11 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            12 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            13 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            14 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            15 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            16 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : '',
+                22 : '',
+                23 : '',
+                24 : ''
+            },
+            17 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : ''
+            },
+            18 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : ''
+            },
+            19 : {
+                1 : '',
+                2 : '',
+                3 : '',
+                4 : '',
+                5 : '',
+                6 : '',
+                7 : '',
+                8 : '',
+                9 : '',
+                10 : '',
+                11 : '',
+                12 : '',
+                13 : '',
+                14 : '',
+                15 : '',
+                16 : '',
+                17 : '',
+                18 : '',
+                19 : '',
+                20 : '',
+                21 : ''
+            }             
+        }
+
+
+        let filtered = new Object()
+
+        Object.keys(clips).forEach( ( seasonNumber ) => {
+            let chapters = new Object()
+
+            Object.keys(clips[seasonNumber]).forEach ( (chapterNumber) => {
+                if (clips[seasonNumber][chapterNumber] !== "")
+                {
+                    chapters[chapterNumber] = clips[seasonNumber][chapterNumber]
+                }
+            })
+
+            if (Object.keys(chapters).length > 0)
+            {
+                filtered[seasonNumber] = chapters
+            }                
+        })
+
+        Object.keys(filtered).forEach( seasonNumber => {
+            seasons.innerHTML += `<option value="${seasonNumber}">Temporada ${seasonNumber}</option>`
+        })
+
+        seasons.addEventListener('change', ( event )  => {
+            chapters.innerHTML = `<option value="" disabled selected>--- Selecciona un capítulo ---</option>`;
+
+            Object.keys(filtered[event.target.value]).forEach ( chapterNumber => {
+                chapters.innerHTML += `<option value="${chapterNumber}">Capítulo ${chapterNumber}</option>`;
+            })
+        })
+
+        chapters.addEventListener('change', ( event )  => {
+            const videoSource = filtered[seasons.value][event.target.value]
+            /*            
+            videojs('video-player').src({ type: 'video/mp4', src: videoSource })
+            */
+           console.log(videoSource)
+           console.log('changed')
+        })        
+
+        
+    </script>
+
+    <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>    
+</body>
+</html>
